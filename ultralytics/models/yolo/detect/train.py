@@ -78,9 +78,15 @@ class DetectionTrainer(BaseTrainer):
         # self.args.box *= 3 / nl  # scale to layers
         # self.args.cls *= self.data["nc"] / 80 * 3 / nl  # scale to classes and layers
         # self.args.cls *= (self.args.imgsz / 640) ** 2 * 3 / nl  # scale to image size and layers
-        self.model.nc = self.data["nc"]  # attach number of classes to model
-        self.model.names = self.data["names"]  # attach class names to model
-        self.model.args = self.args  # attach hyperparameters to model
+        model = self.model
+        while not isinstance(model, DetectionModel):
+            model = model._model
+        # self.model.nc = self.data["nc"]  # attach number of classes to model
+        model.nc = self.data["nc"]  # attach number of classes to model
+        # self.model.names = self.data["names"]  # attach class names to model
+        model.names = self.data["names"]  # attach class names to model
+        # self.model.args = self.args  # attach hyperparameters to model
+        model.args = self.args  # attach hyperparameters to model
         # TODO: self.model.class_weights = labels_to_class_weights(dataset.labels, nc).to(device) * nc
 
     def get_model(self, cfg=None, weights=None, verbose=True):
