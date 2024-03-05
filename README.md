@@ -20,7 +20,7 @@ Clone ultralytics_LiteML repository, navigate to the cloned directory and pip in
 
 ```bash
 git clone https://github.com/CEVA-AI-Labs/ultralytics_LiteML.git
-cd ultralytics
+cd ultralytics_LiteML
 pip install -e .
 pip install dill
 ```
