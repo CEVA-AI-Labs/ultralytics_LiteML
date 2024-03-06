@@ -23,6 +23,7 @@ git clone https://github.com/CEVA-AI-Labs/ultralytics_LiteML.git
 cd ultralytics_LiteML
 pip install -e .
 pip install dill
+pip install pycocotools==2.0.7
 ```
 
 </details>
@@ -30,7 +31,7 @@ pip install dill
 <details open>
 <summary>Usage</summary>
   
-Run [YOLOv8-LiteML](https://github.com/CEVA-AI-Labs/ultralytics_LiteML/tree/main/examples/YOLOv8-LiteML) example for performing QAT on a pretrained model.
+Run [YOLOv8-LiteML-QAT](https://github.com/CEVA-AI-Labs/ultralytics_LiteML/tree/main/examples/YOLOv8-LiteML-QAT) example for performing QAT on a pretrained model.
 
 ### Python
 Create a config.yaml file. Select number of bits for the data and weights quantization. Set per_channel to True for per channel quantization or False for per tensor quantization.
@@ -44,7 +45,7 @@ QAT:
       custom_bits: { }
       symmetric: False
       static: { "status": False,
-                "observer":
+                "observer": ''
                 }
       per_channel: True
 
