@@ -7,16 +7,22 @@ See below for a quickstart installation and usage example.
 <details open>
 <summary>Install</summary>
 Create an environment with Python>=3.8.
-  
+
+```bash
+conda create yolov8-liteml python==3.8
+conda activate yolov8-liteml
+```
+
 Install LiteML package.
   
 ```bash
-unzip LiteML.zip -d LiteML
+unzip LiteML.zip
 cd LiteML/
 bash ./install.sh
+pip install schema
 ```
 
-Clone ultralytics_LiteML repository, navigate to the cloned directory and pip install.
+Change directory to the desried location for installation. Clone ultralytics_LiteML repository, navigate to the cloned directory and pip install.
 
 ```bash
 git clone https://github.com/CEVA-AI-Labs/ultralytics_LiteML.git
@@ -62,16 +68,19 @@ Perform QAT on a pretrained model.
 ```python
 from ultralytics import YOLO
 from liteml.ailabs_liteml.retrainer import RetrainerModel, RetrainerConfig
+import torch
+
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Load a pretrained model
 model = YOLO('yolov8n.pt')
 
 # Wrap DetectionModel with LiteML
 retrainer_cfg = RetrainerConfig("liteml_config.yaml")
-model.model = RetrainerModel(model.model, config=retrainer_cfg).cuda()
+model.model = RetrainerModel(model.model, config=retrainer_cfg).to(device)
 
 # Train the model
-results = model.train(data='coco_ailabs.yaml', epochs=10, imgsz=640, device=0)
+results = model.train(data='coco_ailabs.yaml', epochs=10, imgsz=640, save_period=1, fraction=0.01, device=device)
 
 # Validate the model
 metrics = model.val(data='coco_ailabs.yaml')
