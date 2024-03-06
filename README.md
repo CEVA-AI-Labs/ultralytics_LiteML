@@ -37,7 +37,7 @@ pip install pycocotools==2.0.7
 <details open>
 <summary>Usage</summary>
   
-Run [YOLOv8-LiteML-QAT](https://github.com/CEVA-AI-Labs/ultralytics_LiteML/tree/main/examples/YOLOv8-LiteML-QAT) example for performing QAT on a pretrained model.
+Run [yolov8_liteml_qat](https://github.com/CEVA-AI-Labs/ultralytics_LiteML/blob/main/examples/YOLOv8-LiteML-QAT/yolov8_liteml_qat.py) example for performing QAT on a pretrained model, or run [yolov8_validate_pretrained_qat](https://github.com/CEVA-AI-Labs/ultralytics_LiteML/blob/main/examples/YOLOv8-LiteML-QAT/yolov8_validate_pretrained_qat.py) to validate a pretrained QAT model.
 
 ### Python
 Create a config.yaml file. Select number of bits for the data and weights quantization. Set per_channel to True for per channel quantization or False for per tensor quantization.
