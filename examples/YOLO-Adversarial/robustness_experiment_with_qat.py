@@ -1,7 +1,7 @@
 from ultralytics import YOLO
 import torch
 import torch.nn as nn
-from attacks import FGSM, FGSM2, PGD
+from attacks import FGSM, PGD
 from adversarial import v8Losses
 import copy
 from matplotlib import pyplot as plt
@@ -25,13 +25,13 @@ CONFS_W_ONLY = {
     7: 'configs/weight_only/w7_per_channel.yaml',
     8: 'configs/weight_only/w8_per_channel.yaml',
 }
-CONFS_PC_PT = [
-    'configs/w4a4_per_channel_per_tensor.yaml',
-    'configs/w5a5_per_channel_per_tensor.yaml',
-    'configs/w6a6_per_channel_per_tensor.yaml',
-    'configs/w7a7_per_channel_per_tensor.yaml',
-    'configs/w8a8_per_channel_per_tensor.yaml',
-]
+CONFS_PC_PT = {
+    4: 'configs/w4a4_per_channel_per_tensor.yaml',
+    5: 'configs/w5a5_per_channel_per_tensor.yaml',
+    6: 'configs/w6a6_per_channel_per_tensor.yaml',
+    7: 'configs/w7a7_per_channel_per_tensor.yaml',
+    8: 'configs/w8a8_per_channel_per_tensor.yaml',
+}
 MODELS_QAAT = {
     'float': 'runs/detect/yolov5n/float_e-3_f-1.0_AT/weights/best.pt',
     4: 'runs/detect/yolov5n/QAAT/w4a4_per_channel_per_channel_e-3_f-1.0_AT/weights/best.pt',
@@ -113,7 +113,6 @@ def main():
     # validate float model
     model_float = YOLO(yolo_version).cuda()
     model_float.model.criterion = v8Losses(model_float.model)
-    # model_float.model._model._model.criterion = v8Losses(model_float.model._model._model)
     attack = PGD(model_float)
     map_float_clean = (model_float.val(data=COCO, plots=False)).box.map
     map_float_adv = (model_float.val(data=COCO, attack=attack, plots=False)).box.map
