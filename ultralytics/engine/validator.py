@@ -76,6 +76,10 @@ class BaseValidator:
             args (SimpleNamespace): Configuration for the validator.
             _callbacks (dict): Dictionary to store various callback functions.
         """
+        if isinstance(args, dict):
+            self.attack = args.pop('attack', None)
+        else:
+            self.attack = None
         self.args = get_cfg(overrides=args)
         self.dataloader = dataloader
         self.pbar = pbar
@@ -102,7 +106,7 @@ class BaseValidator:
         self.plots = {}
         self.callbacks = _callbacks or callbacks.get_default_callbacks()
 
-    @smart_inference_mode()
+    # @smart_inference_mode()
     def __call__(self, trainer=None, model=None):
         """Supports validation of a pre-trained model if passed or a model being trained if trainer is passed (trainer
         gets priority).
@@ -172,6 +176,10 @@ class BaseValidator:
             # Preprocess
             with dt[0]:
                 batch = self.preprocess(batch)
+
+            if self.attack:
+                perturbed_imgs = self.attack(batch)
+                batch["img"] = perturbed_imgs.detach()
 
             # Inference
             with dt[1]:

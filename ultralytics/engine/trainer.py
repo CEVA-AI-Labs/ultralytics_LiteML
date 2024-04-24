@@ -95,6 +95,7 @@ class BaseTrainer:
             cfg (str, optional): Path to a configuration file. Defaults to DEFAULT_CFG.
             overrides (dict, optional): Configuration overrides. Defaults to None.
         """
+        self.attack = overrides.pop('attack', None)
         self.args = get_cfg(cfg, overrides)
         self.check_resume(overrides)
         self.device = select_device(self.args.device, self.args.batch)
@@ -373,7 +374,17 @@ class BaseTrainer:
                 # Forward
                 with torch.cuda.amp.autocast(self.amp):
                     batch = self.preprocess_batch(batch)
+                    if self.attack:
+                        batch_adv = deepcopy(batch)
+                        perturbed_imgs = self.attack(batch_adv)
+                        batch_adv["img"] = perturbed_imgs.detach()
+                        loss_adv, loss_items_adv = self.model(batch_adv)
+
                     self.loss, self.loss_items = self.model(batch)
+                    if self.attack:
+                        # Add adversarial loss to the original loss
+                        self.loss += loss_adv
+                        self.loss_items += loss_items_adv
                     if RANK != -1:
                         self.loss *= world_size
                     self.tloss = (
