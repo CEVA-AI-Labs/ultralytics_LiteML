@@ -1,5 +1,6 @@
 QAT:
     fully_quantized: False
+    merge_conv_bn: False
     device: 'cuda'
     data_quantization:
       status: On
