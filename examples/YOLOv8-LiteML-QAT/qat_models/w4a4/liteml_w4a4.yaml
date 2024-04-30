@@ -1,15 +1,14 @@
-Q34G67#!: True
 QAT:
     fully_quantized: False
+    merge_conv_bn: False
     device: 'cuda'
     data_quantization:
       status: On
       bits: 4
       custom_bits: { }
       symmetric: False
-      static: { "status": False,
-                "observer": ''
-                }
+      quantization_mode: dynamic
+      observer: 'MinMax'
       per_channel: True
 
     weights_quantization:
