@@ -33,7 +33,7 @@ CONFS_PC_PT = {
     8: 'configs/w8a8_per_channel_per_tensor.yaml',
 }
 MODELS_QAAT = {
-    'float': 'runs/detect/yolov5n/float_e-3_f-1.0_AT/weights/best.pt',
+    'float': 'runs/detect/yolov5n/QAAT/float_e-3_f-1.0_AT/weights/best.pt',
     4: 'runs/detect/yolov5n/QAAT/w4a4_per_channel_per_channel_e-3_f-1.0_AT/weights/best.pt',
     5: 'runs/detect/yolov5n/QAAT/w5a5_per_channel_per_channel_e-3_f-1.0_AT/weights/best.pt',
     6: 'runs/detect/yolov5n/QAAT/w6a6_per_channel_per_channel_e-3_f-1.0_AT/weights/best.pt',
@@ -125,7 +125,7 @@ def main():
         if qat:
             model_original = YOLO(cfg_file).cuda()
         model = copy.deepcopy(model_original)
-        if isinstance(model, RetrainerModel):
+        if isinstance(model.model, RetrainerModel):
             # Model is wrapped twice with LiteML RetrainerModel class
             model.model._model._model.criterion = v8Losses(model.model._model._model)
         else:
