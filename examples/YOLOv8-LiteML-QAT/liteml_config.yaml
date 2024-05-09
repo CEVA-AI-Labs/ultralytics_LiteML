@@ -1,19 +1,20 @@
 QAT:
-    fully_quantized: False
-    device: 'cuda'
+    device: "cuda"
+    fully_quantized: True
+    merge_conv_bn: False
     data_quantization:
       status: On
       bits: 8
-      custom_bits: { }
-      symmetric: False
-      static: { "status": False,
-                "observer": ''
-                }
-      per_channel: True
+      custom_bits: {}
+      symmetric: Off
+      per_channel: False
+      quantization_mode: static
+      observer: "MovingAverage"
 
     weights_quantization:
       status: On
-      bits: 4
-      symmetric: False
-      custom_bits:  {}
+      bits: 8
+      custom_bits: {}
+      symmetric: On
       per_channel: True
+      quant_and_freeze: True
