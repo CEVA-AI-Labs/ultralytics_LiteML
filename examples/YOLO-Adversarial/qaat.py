@@ -41,6 +41,7 @@ def create_output_file_name(args):
 
 def main():
     args = get_args()
+    batch_size = 16
     results_path = create_output_file_name(args)
     # Load a model
     model = YOLO(args.model).cuda()
@@ -58,11 +59,17 @@ def main():
         model.model = RetrainerModel(model.model, config=retrainer_cfg).cuda()
 
         # forward pass random image in the model to update scale factor shapes
-        inp = torch.rand((1, 3, 640, 640)).cuda()
+        inp = torch.rand((batch_size, 3, 640, 640)).cuda()
         out = model.model._model._model(inp)
 
     # Train the model
-    results = model.train(data='coco_ailabs.yaml', epochs=args.epochs, imgsz=640, save_period=1, fraction=args.fraction, name=results_path,
+    results = model.train(data='coco_ailabs.yaml',
+                          epochs=args.epochs,
+                          batch=batch_size,
+                          imgsz=640,
+                          save_period=1,
+                          fraction=args.fraction,
+                          name=results_path,
                           device=0, attack=attack)
 
 
