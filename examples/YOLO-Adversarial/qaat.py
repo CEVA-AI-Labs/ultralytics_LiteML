@@ -7,6 +7,7 @@ sys.path.append('/projects/vbu_projects/users/royj/gitRepos/ailabs_liteml')
 from liteml.ailabs_liteml.retrainer import RetrainerModel, RetrainerConfig
 from attacks import FGSM, PGD
 from adversarial import v8Losses
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 def get_args():
     parser = argparse.ArgumentParser(description='QAT arguments')
@@ -44,7 +45,7 @@ def main():
     batch_size = 16
     results_path = create_output_file_name(args)
     # Load a model
-    model = YOLO(args.model).cuda()
+    model = YOLO(args.model).to(device)
     # For adversarial attacks
     # model.model.criterion = v8Losses(model.model)
     if args.at:
@@ -56,10 +57,10 @@ def main():
         retrainer_cfg = RetrainerConfig(args.cfg)
         print(f'************** Retraining {args.cfg} **************')
         # model.eval()
-        model.model = RetrainerModel(model.model, config=retrainer_cfg).cuda()
+        model.model = RetrainerModel(model.model, config=retrainer_cfg).to(device)
 
         # forward pass random image in the model to update scale factor shapes
-        inp = torch.rand((batch_size, 3, 640, 640)).cuda()
+        inp = torch.rand((batch_size, 3, 640, 640)).to(device)
         out = model.model._model._model(inp)
 
     # Train the model
@@ -70,7 +71,7 @@ def main():
                           save_period=1,
                           fraction=args.fraction,
                           name=results_path,
-                          device=0, attack=attack)
+                          device=device, attack=attack)
 
 
 if __name__=='__main__':

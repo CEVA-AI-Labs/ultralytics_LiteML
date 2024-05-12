@@ -448,7 +448,10 @@ class ModelEMA:
             d = self.decay(self.updates)
 
             msd = de_parallel(model).state_dict()  # model state_dict
+            ignore_ema = ['scale_factor', 'zp']
             for k, v in self.ema.state_dict().items():
+                if k.split('.')[-1] in ignore_ema:
+                    continue
                 if v.dtype.is_floating_point:  # true for FP16 and FP32
                     v *= d
                     v += (1 - d) * msd[k].detach()
