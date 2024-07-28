@@ -3,8 +3,8 @@ QAT:
     merge_conv_bn: False
     device: 'cuda'
     data_quantization:
-      status: Off
-      bits: 16
+      status: On
+      bits: 8
       custom_bits: { }
       symmetric: False
       quantization_mode: dynamic
@@ -12,8 +12,8 @@ QAT:
       per_channel: True
 
     weights_quantization:
-      status: On
-      bits: 4
+      status: False
+      bits: 8
       symmetric: False
       custom_bits:  {}
       per_channel: True

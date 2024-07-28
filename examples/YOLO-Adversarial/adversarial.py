@@ -119,7 +119,7 @@ class v8Losses:
         # return loss.sum() * batch_size, loss.detach()  # loss(box, cls, dfl)
 
 
-def load_dataset(model, cfg=DEFAULT_CFG, **kwargs):
+def load_dataset(model, cfg=DEFAULT_CFG, batch_size=16, **kwargs):
     args = {**model.overrides, **kwargs, "mode": "train"}  # highest priority args on the right
     # overrides = model.overrides
     cfg = get_cfg(cfg, args)
@@ -128,7 +128,6 @@ def load_dataset(model, cfg=DEFAULT_CFG, **kwargs):
     if "yaml_file" in data:
         cfg.data = data["yaml_file"]  # for validating 'yolo train data=url.zip' usage
     trainset = data.get("train")
-    batch_size = 16
     dataset = build_dataset(model=model.model, args=cfg, data=data, img_path=trainset, mode="val", batch=batch_size)
     dataloader = get_dataloader(dataset, batch_size, rank=RANK, workers=cfg.workers)
     return dataset, dataloader
