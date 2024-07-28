@@ -1,5 +1,5 @@
 QAT:
-    fully_quantized: False
+    fully_quantized: True
     merge_conv_bn: False
     device: 'cuda'
     data_quantization:
