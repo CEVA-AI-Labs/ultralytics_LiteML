@@ -167,3 +167,4 @@ pnnx*
 # examples
 /examples/YOLO-Adversarial/adversarial_training.sh
 /examples/YOLO-Adversarial/qat_runme.sh
+/inria/
